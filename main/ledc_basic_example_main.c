@@ -4,7 +4,7 @@
 #include "driver/gpio.h"
 
 // Define GPIO pin for LED
-#define LED_BUILTIN 8
+#define LED_BUILTIN 8 // recuerda que en esp 0 es on para el led
 
 void led_setup(void){
     // Configure GPIO
@@ -22,15 +22,15 @@ void blink_code(int cantidad, int tiempoms, int ciclos)
             
                 // Turn LED ON
                 printf("LED ON\n");
-                gpio_set_level(LED_BUILTIN, 1);
+                gpio_set_level(LED_BUILTIN, 0);
                 vTaskDelay(tiempoms / portTICK_PERIOD_MS); // Delay 1 second
 
                 // Turn LED OFF
                 printf("LED OFF\n");
-                gpio_set_level(LED_BUILTIN, 0);
+                gpio_set_level(LED_BUILTIN, 1);
                 vTaskDelay(tiempoms / portTICK_PERIOD_MS); // Delay 1 second
         }
-        gpio_set_level(LED_BUILTIN, 0);
+        gpio_set_level(LED_BUILTIN, 1);
         vTaskDelay(5*tiempoms / portTICK_PERIOD_MS); // Delay 5 second
     }
 }
