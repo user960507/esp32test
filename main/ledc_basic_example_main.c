@@ -59,13 +59,19 @@ void app_main(void)
 
     //setups
     led_setup();
-
     temp_sensor = temp_setup();
     temperature_sensor_enable(temp_sensor);
 
     //main logic
-    temperature_sensor_get_celsius(temp_sensor, &temperature);
-    printf("lectura %.02f C", temperature);
-    blink_code(5,500,5);
+    for(int i =0; i<50; i++){
+        temperature_sensor_get_celsius(temp_sensor, &temperature);
+        printf("lectura %.02f C \n", temperature);
+        vTaskDelay(5000/ portTICK_PERIOD_MS); // Delay 1 second
+
+        if(temperature > 35.5){
+            printf("HIGH TEMP!!!! \n");
+            blink_code(5,500,5);
+        }
+    }
 
 }
