@@ -173,7 +173,7 @@ void tcp_client(void)
 
 //------------------------------------send dataaa
 
-            if(strcmp(rx_buffer, "gettemp0")){
+            if(strcmp(rx_buffer, "gettemp")){
                 temperature = get_temperature(temp_sensor);
                 printf("lectura  %.02f C\n", temperature);
                 sprintf(buffy_temp, "lectura %.02f C\n", temperature);
