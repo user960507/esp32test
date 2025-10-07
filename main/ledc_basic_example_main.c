@@ -46,6 +46,17 @@
 
 bool connected = false;
 
+typedef enum comandos{
+    gettemp,
+    blynk1,
+    unknown
+}Comms;
+
+Comms resolveCMD(char *datos){
+    if(strcmp(datos, "gettemp")==0){return gettemp;}
+    if(strcmp(datos, "blynk1")==0){return blynk1;}
+    return unknown;
+}
 
 void append(char *dest, char *src) {
     while (*dest) { // Move the pointer to the end of the destination string
@@ -172,8 +183,8 @@ void tcp_client(void)
             }
 
 //------------------------------------send dataaa
-
-            if(strcmp(rx_buffer, "gettemp")){
+            /*
+            if(strcmp(rx_buffer, "gettemp")== 0){
                 temperature = get_temperature(temp_sensor);
                 printf("lectura  %.02f C\n", temperature);
                 sprintf(buffy_temp, "lectura %.02f C\n", temperature);
@@ -182,6 +193,27 @@ void tcp_client(void)
             else{
                 err = send(sock, payload, strlen(payload), 0);
             }
+            */
+           switch (resolveCMD(rx_buffer))
+           {
+           case gettemp:
+                temperature = get_temperature(temp_sensor);
+                printf("lectura  %.02f C\n", temperature);
+                sprintf(buffy_temp, "lectura %.02f C\n", temperature);
+                err = send(sock, buffy_temp, strlen(buffy_temp), 0);
+            break;
+            case blynk1:
+                printf("blinkinnnnn");
+                blink_code(3,250,3);
+                err = send(sock, payload, strlen(payload), 0);
+            break;
+           
+           default:
+            err = send(sock, payload, strlen(payload), 0);
+            break;
+           }
+//------------------------------------send dataaa
+
 
             //int err = send(sock, payload, strlen(payload), 0);
 			printf("ENVIEEE DATOSSSSSSSS\n");
