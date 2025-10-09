@@ -46,6 +46,7 @@
 
 bool connected = false;
 
+//Definicion de los commandos
 typedef enum comandos{
     gettemp,
     blynk1,
@@ -57,6 +58,8 @@ Comms resolveCMD(char *datos){
     if(strcmp(datos, "blynk1")==0){return blynk1;}
     return unknown;
 }
+
+
 
 void append(char *dest, char *src) {
     while (*dest) { // Move the pointer to the end of the destination string
@@ -70,11 +73,12 @@ void append(char *dest, char *src) {
     *dest = '\0'; // Null-terminate the resulting string
 }
 
-//led functions and subs
+//led functions
 void led_setup(void){
     // Configure GPIO
     gpio_reset_pin(LED_BUILTIN);
     gpio_set_direction(LED_BUILTIN, GPIO_MODE_OUTPUT);
+    gpio_set_level(LED_BUILTIN, 1);
 }
 
 void blink_code(int cantidad, int tiempoms, int ciclos)
@@ -97,7 +101,7 @@ void blink_code(int cantidad, int tiempoms, int ciclos)
                 gpio_set_level(LED_BUILTIN, 1);
                 vTaskDelay(tiempoms / portTICK_PERIOD_MS); // Delay 1 second
         }
-        gpio_set_level(LED_BUILTIN, 0);
+        gpio_set_level(LED_BUILTIN, 1);
         vTaskDelay(5*tiempoms / portTICK_PERIOD_MS); // Delay 5 second
     }
 
@@ -130,10 +134,12 @@ void tcp_client(void)
     int addr_family = 0;
     int ip_protocol = 0;
 
-    //variables
-    
+    //setups
+    led_setup(); // habiaaa ovidado configurar el pin para el led!!!!!
     temperature_sensor_handle_t temp_sensor = temp_setup();
     temperature_sensor_enable(temp_sensor);
+
+    //variables
     float temperature;
     char buffy_temp[32];
     char *payload = "Message from ESP32____\n";
@@ -292,24 +298,11 @@ void wifi_init_softap(void)
 
 void app_main(void)
 {   
-    
 
 
     //Initialize NVS
     nvs_flash_init();
     wifi_init_softap();
     
-
-    //for(int i= 0; i<5; i++){
-    //    float temperature;
-    //    temperature = get_temperature(temp_sensor);
-    //    printf("lectura %.02f C \n", temperature);
-    //}
-    //setups
-    //led_setup();
-    
-
-
-       
 
 }
